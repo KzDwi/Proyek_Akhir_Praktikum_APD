@@ -1,0 +1,42 @@
+{
+    "User": [
+        {
+            "username": "username",
+            "password": "password",
+            "kontak": [
+                {
+                    "nama": "Contact",
+                    "nomor": "2222",
+                    "email": "email@gmail.com"
+                }
+            ]
+        },
+        {
+            "username": "dwi",
+            "password": "200600",
+            "kontak": [
+                {
+                    "nama": "aa",
+                    "nomor": "22",
+                    "email": "N/A"
+                }
+            ]
+        }
+    ],
+    "Admin": [
+        {
+            "username": "admin",
+            "password": "admin",
+            "kontak_K": [
+                {
+                    "nama": "Cek Nomor",
+                    "nomor": "808"
+                },
+                {
+                    "nama": "Layanan Pencegahan Bunuh Diri",
+                    "nomor": "119"
+                }
+            ]
+        }
+    ]
+}
