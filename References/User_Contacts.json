@@ -1,0 +1,39 @@
+{
+    "User" : [
+        {
+        "username" : "username",
+        "password" : "password",
+        "kontak" : [
+                {
+                "nama":"Contact",
+                "nomor":"2222",
+                "email":"email@gmail.com"},
+                {
+                "nama":"Contact",
+                "nomor":"2222",
+                "email":"email@gmail.com"}
+            ]
+        },
+        {
+        "username" : "username1",
+        "password" : "password1",
+        "kontak" : []
+        }
+    ],
+    "Admin" : [
+        {
+            "username" : "Admin",
+            "password" : "Admin1234",
+            "kontak_K" :[
+                {
+                    "nama" : "Cek Nomor",
+                    "nomor" : "808"
+                },
+                {
+                    "nama" : "Layanan FBI",
+                    "nomor" : "111"
+                }
+            ]
+        }
+    ]
+}
