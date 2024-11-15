@@ -5,8 +5,8 @@
             "password": "password",
             "kontak": [
                 {
-                    "nama": "Contact",
-                    "nomor": "2222",
+                    "nama": "Waim Bong",
+                    "nomor": "081117777",
                     "email": "email@gmail.com"
                 }
             ]
@@ -16,8 +16,13 @@
             "password": "200600",
             "kontak": [
                 {
-                    "nama": "aa",
-                    "nomor": "22",
+                    "nama": "duar",
+                    "nomor": "200",
+                    "email": "N/A"
+                },
+                {
+                    "nama": "penambah",
+                    "nomor": "220",
                     "email": "N/A"
                 }
             ]
@@ -29,8 +34,8 @@
             "password": "admin",
             "kontak_K": [
                 {
-                    "nama": "Cek Nomor",
-                    "nomor": "808"
+                    "nama": "Cek Pulsa",
+                    "nomor": "888"
                 },
                 {
                     "nama": "Layanan Pencegahan Bunuh Diri",

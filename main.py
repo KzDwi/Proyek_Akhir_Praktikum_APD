@@ -1,24 +1,20 @@
 import json
 import csv
-import smtplib, ssl
+import smtplib
 import os
 
 
 start = True # Untuk Pengulangan saat login berhasil
 
-
-smtp_server = "smtp.gmail.com"
-port = 465  # For starttls
-sender_email = "ebot3142@gmail.com"
-password = "TugasPraktikum99"
-receiver_email = "chrogam@gmail.com"
-context = ssl.create_default_context()
-
-# Membaca User_Contacts.json  
+# Deklarasi Tempat json
 json_s = str(os.path.dirname(os.path.abspath(__file__))) + "\\Contacts.json"
+
+json_cl = str(os.path.dirname(os.path.abspath(__file__))) + "\\Changelogs.json"
+
+# Membaca Contacts.json  
 def load_contacts():
-    with open(json_s, 'r') as User_Contacts:
-        return json.load(User_Contacts) 
+    with open(json_s, 'r') as Contacts:
+        return json.load(Contacts) 
 data = load_contacts()
 
 # Simpan Perubahan kedalam json
@@ -26,31 +22,38 @@ def save_contacts(data):
     with open(json_s, 'w') as dataContacts: 
         json.dump(data, dataContacts, indent=4)
 
-#Fitur Umpan Balik yang bisa langsung masuk kedalam email
+# Membaca Changelog.json
+# def load_changelog():
+#     with open(json_cl, "r") as pengumuman:
+#         return json.load(pengumuman)
+# changelog = load_changelog()
+
+# Fitur Umpan Balik yang bisa langsung masuk kedalam email
 def feedback():
+    smtp_server = "smtp.gmail.com"
+    port = 587  # For starttls
+    sender_email = "ebot3412@gmail.com"
+    password = "fdlvihxcutptrrdl"
+    receiver_email = "chrogam@gmail.com"
     try:
-        with smtplib.SMTP("live.smtp.mailtrap.io", 587) as server:
-            server.starttls()
-            server.login("api", "5b3db5f3dc725270cdbd976031bdf345")
-            message = input("Berikan Feedback kalian :")
-            server.sendmail(sender_email, receiver_email, message)
+        server = smtplib.SMTP(smtp_server,port)
+        server.starttls()
+        server.login(sender_email, password)
+        message = input("Berikan Feedback kalian :")
+        server.sendmail(sender_email, receiver_email, message)
+        server.quit()
     except Exception as e:
         print(e)
-    finally:
-        server.quit()
 
 # Fungsi untuk Pengumuman pada kontak
-def pengumuman():
-    with open("changelog.csv", "r") as pengumuman:
-        reader = csv.reader(pengumuman)
-        changelog = list(reader)
-        for data in enumerate(changelog):
-            version, perubahan = data
-            print(f"Versi : {version}\n")
-            for i in enumerate(perubahan):
-                print(f"{i}")
+# def pengumuman():
+#         for data in enumerate(changelog):
+#             version, perubahan = data
+#             print(f"Versi : {version}\n")
+#             for i in enumerate(perubahan):
+#                 print(f"{i}")
 
-
+# Tuple yang muncul saat berada di menu awal
 def copyright():
     copyright = ["Manajemen Kontak Informasi","Ahnaf Aliyyu (2409106035)","Nabila Putri Karni (2409106041)","Dwi Prasetyawan (2409106028)"]
     print("="*20)
@@ -90,21 +93,25 @@ def updating_user_contact(pengguna_aktif,pilihan_kontak):
     nomor_baru = input("Nomor : ")
     email_baru = input("E-mail : ")
     for kontak in data['User']:
-        up = kontak['kontak'][pilihan_kontak]
-        up['nama'] = nama_baru
-        up['nomor'] = nomor_baru
-        up['email'] = email_baru
+        if kontak['username'] == pengguna_aktif:
+            up = kontak['kontak'][pilihan_kontak]
+            up['nama'] = nama_baru
+            up['nomor'] = nomor_baru
+            up['email'] = email_baru
 
 # Fungsi Mengubah Data Kontak Pengguna Tertentu
 def update_user_contact():
     show_user_contact()
     pilihan_kontak = int(input("Pilih kontak yang ingin diubah (hanya angka) : ")) - 1
-    if pilihan_kontak >= 0 and pilihan_kontak <= len(aktif['kontak']):
-        updating_user_contact(pengguna_aktif,pilihan_kontak)
-        save_contacts(data)
-        print("Kontak berhasil diubah")
-    else:
-        print("Kontak tidak ditemukan")
+    for kontak in data['User']:
+        if pengguna_aktif == kontak["username"]:
+            if pilihan_kontak >= 0 and pilihan_kontak <= len(aktif['kontak']):
+                updating_user_contact(pengguna_aktif,pilihan_kontak)
+                save_contacts(data)
+                print("Kontak berhasil diubah")
+            else:
+                print("Kontak tidak ditemukan")
+            break
 
 # Menampilkan Kontak Pengguna
 def show_user_contact():
@@ -132,23 +139,8 @@ def add_admin_contact():
         kontak['kontak_K'].append({"nama":nama_adm,"nomor":nomor_adm})
     save_contacts(data)
 
-
-
-    
 #  Melihat Semua Daftar Kontak sbg admin
 def check_admin_contact():
-    # for kontak in data['User'].values(): # Menampilkan kontak Pengguna
-    #     for c in kontak["kontak"]:
-    #         print(f"Nama : {c['nama']}\nNomor : {c['nomor']}\nE-mail : {c['email']}\n")
-    # print("Kontak lainnya :")
-    # for kontakk in data['Admin']: # Untuk menampilkan kontak publik
-    #     for contact in enumerate(kontakk['kontak_K']):
-    #         print(f"Nama : {contact['nama']}\nNomor : {contact['nomor']}\n")
-    #             print("Daftar Kontak Pengguna:")
-            
-
-
-    # Loop through user contacts
     for user in data['User']:
         print(f"\nPengguna: {user['username']}")
         for num, contact in enumerate(user['kontak']):
@@ -163,15 +155,15 @@ def check_admin_contact():
 # Menampilkan Daftar Kontak Admin
 def show_admin_contact():
     for kontakk in data['Admin']:
-        for contact in enumerate(kontakk['kontak_K']):
+        for num, contact in enumerate(kontakk['kontak_K']):
             print(f"Nama : {contact['nama']}\nNomor : {contact['nomor']}\n")
 
 # Proses Mengubah Kontak Admin
 def updating_admin_contact(pilihan_kontak_adm):
     nama_adm_baru = input("Nama : ")
     nomor_adm_baru = input("Nomor : ")
-    for kontak in data['User']:
-        up = kontak['kontak'][pilihan_kontak_adm]
+    for kontak in data['Admin']:
+        up = kontak['kontak_K'][pilihan_kontak_adm]
         up['nama'] = nama_adm_baru
         up['nomor'] = nomor_adm_baru
 
@@ -204,6 +196,7 @@ while True:
     try:
         # menu utama
         print("""
+        
         =============================
         |     MANAJEMEN KONTAK      |
         =============================
@@ -233,6 +226,8 @@ while True:
                 for admin in data['Admin']:
                     if pengguna_aktif == admin['username'] and admin['password'] == kata_sandi:
                         akses = 2
+                    else:
+                        continue
                 if akses == 1:
                     aktif = None
                     for akun in data['User']:
@@ -255,7 +250,7 @@ while True:
             | [6] Log Out          |
             ========================
     """)
-                        ans = int(input("Pilih Fitur [1-5] : "))
+                        ans = int(input("Pilih Fitur [1/2/3/4/5/6] : "))
                         match ans:
                             case 1:
                                 add_user_contact()
@@ -276,8 +271,8 @@ while True:
                                 break
     
                             case _:
-                                print("Perintah tidak diketahui (Pilih opsi antara 1 sampai 5)")
-    
+                                print("Perintah tidak diketahui (Pilih opsi antara 1 sampai 6)")
+
                 elif akses == 2:
                     print("Login Berhasil!")
                     while start == True:
@@ -294,7 +289,7 @@ while True:
             |                                |
             ==================================
     """)
-                        pilihan_adm = int(input("Pilih Fitur (1 - 4) : "))
+                        pilihan_adm = int(input("Pilih Fitur (1/2/3/4) : "))
                         match pilihan_adm:
                             case 1:
                                 add_admin_contact()
@@ -326,7 +321,7 @@ while True:
                             print("Perintah tidak ditemukan (Hanya Y/N) ")
         elif pilihan == 2:
             create_account(data)
-            
+        
         elif pilihan == 3:
             # Keluar Program
             break
