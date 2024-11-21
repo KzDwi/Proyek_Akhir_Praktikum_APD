@@ -9,7 +9,7 @@ start = True # Untuk Pengulangan saat login berhasil
 # Deklarasi Tempat json
 json_s = str(os.path.dirname(os.path.abspath(__file__))) + "\\Contacts.json"
 
-json_cl = str(os.path.dirname(os.path.abspath(__file__))) + "\\Changelogs.json"
+json_feedback = str(os.path.dirname(os.path.abspath(__file__))) + "\\feedback.json"
 
 # Membaca Contacts.json  
 def load_contacts():
@@ -21,15 +21,9 @@ data = load_contacts()
 def save_contacts(data):
     with open(json_s, 'w') as dataContacts: 
         json.dump(data, dataContacts, indent=4)
-
-# Membaca Changelog.json
-# def load_changelog():
-#     with open(json_cl, "r") as pengumuman:
-#         return json.load(pengumuman)
-# changelog = load_changelog()
-
+        
 # Fitur Umpan Balik yang bisa langsung masuk kedalam email
-def feedback():
+def feedback(feedback_message):
     smtp_server = "smtp.gmail.com"
     port = 587  # For starttls
     sender_email = "ebot3412@gmail.com"
@@ -39,11 +33,43 @@ def feedback():
         server = smtplib.SMTP(smtp_server,port)
         server.starttls()
         server.login(sender_email, password)
-        message = input("Berikan Feedback kalian :")
+        message = feedback_message
         server.sendmail(sender_email, receiver_email, message)
         server.quit()
     except Exception as e:
         print(e)
+
+# Membaca feedback.json
+def load_feedback():
+    try:
+        with open(json_feedback, 'r') as feedback_file:
+            return json.load(feedback_file)
+    except FileNotFoundError:
+        return {"Feedback": []}
+
+# Simpan Perubahan ke dalam feedback.json
+def save_feedback (feedback_data):
+    with open(json_feedback, 'w') as feedback_file:
+        json.dump(feedback_data, feedback_file, indent=4)
+
+# Fitur Umpan Balik yang menyimpan ke JSON
+def feed_back():
+    changelogs = load_feedback()
+    print("========== FEEDBACK ==========")
+    pengguna_aktif = input("Masukkan Username Anda : ")
+    if not pengguna_aktif:
+        print("Username harus diisi. feedback dibatalkan. ")
+        return
+
+    feedback_message = input("Berikan Feedback Anda : ")
+    if feedback_message != None:
+        # Tambahkan umpan balik ke data JSON
+        feedback(feedback_message)
+        changelogs["Feedback"].append({"username": pengguna_aktif,"pesan": feedback_message})
+        save_feedback(changelogs)
+        print("Feedback Anda tersimpan. Terima kasih!")
+    else:
+        print("Pesan kosong, feedback tidak tersimpan.")
 
 # Fungsi untuk Pengumuman pada kontak
 # def pengumuman():
@@ -195,6 +221,7 @@ def create_account(data):
 while True:
     try:
         # menu utama
+        copyright()
         print("""
         
         =============================
@@ -265,7 +292,7 @@ while True:
                                 delete_user_contact()
                             
                             case 5:
-                                feedback()
+                                feed_back()
                             case 6:
                                 i = 1
                                 break
