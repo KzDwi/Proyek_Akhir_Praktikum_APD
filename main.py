@@ -217,7 +217,7 @@ def create_account(data):
         return data
     password = input("Masukkan Password : ")
     Nama = input("Masukkan Nama Kamu :")
-    data['User'].append({"username":username,"password":password,"kontak":[]})
+    data['User'].append({"username":username,"nama":Nama,"password":password,"kontak":[]})
     save_contacts(data)
     print("Akun anda telah dibuat, silahkan pilih opsi login untuk masuk")
 
