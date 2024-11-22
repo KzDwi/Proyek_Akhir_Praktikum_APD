@@ -91,7 +91,12 @@ def copyright():
 
 # Menambahkan Kontak Pengguna
 def add_user_contact():
-    nama = input("Masukkan nama kontak : ")
+    while True:
+        nama = input("Masukkan nama kontak : ")
+        if nama.strip() == "":
+            print("Nama tidak boleh kosong")
+        else:
+            break
     while True:
         nomor = input("Masukkan nomor kontak : ")
         if not nomor.isnumeric() :
@@ -102,6 +107,7 @@ def add_user_contact():
         e_mail = input("Masukkan E-Mail (Tekan Enter jika tidak ada) : ").strip()
         if e_mail == "":
             e_mail = "N/A"
+            break
         elif "@" not in e_mail:
             print("E-mail tidak lengkap")
         else:
@@ -131,7 +137,12 @@ def check_user_contact():
 
 # Proses Mengubah Data Kontak
 def updating_user_contact(pengguna_aktif, pilihan_kontak):
-    nama_baru = input("Nama : ")
+    while True:
+        nama_baru = input("Masukkan nama kontak : ")
+        if nama_baru.strip() == "":
+            print("Nama tidak boleh kosong")
+        else:
+            break
     while True:
         nomor_baru = input("Nomor : ").strip()
         if not nomor_baru.isnumeric():
@@ -142,6 +153,7 @@ def updating_user_contact(pengguna_aktif, pilihan_kontak):
         email_baru = input("E-mail : ")
         if email_baru.strip() == "":
             email_baru = "N/A"
+            break
         elif "@" not in email_baru:
             print("E-mail tidak lengkap")
         else:
@@ -191,7 +203,7 @@ def delete_user_contact():
     try:
         indeks_hapus = int(input("Pilih kontak yang ingin dihapus (hanya angka) : ")) - 1
         for kontak in data['User']:
-            if pengguna_aktif == kontak['username ']:
+            if pengguna_aktif == kontak['username']:
                 if 0 <= indeks_hapus < len(kontak['kontak']):
                     kontak_lama = kontak['kontak'].pop(indeks_hapus)
                     save_contacts(data)
@@ -205,24 +217,32 @@ def delete_user_contact():
 # Menambah kontak baru sbg admin
 def add_admin_contact():
     tried = 0
-    nama_adm = input("Masukkan nama kontak : ")
+    while True:
+        nama_adm = input("Masukkan nama kontak : ")
+        if nama_adm.strip() == "":
+            print("Nama tidak boleh kosong")
+        else:
+            break
     while tried < 3:
         nomor_adm = input("Masukkan nomor kontak : ").strip()
-        if not nomor_adm.isnumeric() or nomor_adm == "*" or "#":
+        if not nomor_adm.isnumeric():
             print("Nomor tidak valid")
             tried += 1
         else:
             break
-    if any(kontakk['nama'] == nama_adm for kontakk in data['Admin']['kontak_K']):
-        print("Nama kontak telah terdaftar, silahkan masukkan kontak lain")
-    else:
-        if any(kontakk['nomor'] == nomor_adm for kontakk in data['Admin']['kontak_K']):
-            print("Nomor kontak telah terdaftar, silahkan masukkan kontak lain")
+    if tried == 3:
+        return
+    for atmin in data['Admin']:
+        if any(kontakk['nama'] == nama_adm for kontakk in atmin['kontak_K']):
+            print("Nama kontak telah terdaftar, silahkan masukkan kontak lain")
         else:
-            for kontak in data['Admin']:
-                kontak['kontak_K'].append({"nama": nama_adm, "nomor": nomor_adm})
-            save_contacts(data)
-            print("Kontak admin berhasil ditambahkan.")
+            if any(kontakk['nomor'] == nomor_adm for kontakk in atmin['kontak_K']):
+                print("Nomor kontak telah terdaftar, silahkan masukkan kontak lain")
+            else:
+                for kontak in data['Admin']:
+                    kontak['kontak_K'].append({"nama": nama_adm, "nomor": nomor_adm})
+                save_contacts(data)
+                print("Kontak admin berhasil ditambahkan.")
 
 #  Melihat Semua Daftar Kontak sbg admin
 def check_admin_contact():
@@ -240,23 +260,31 @@ def check_admin_contact():
 def show_admin_contact():
     for kontakk in data['Admin']:
         for num, contact in enumerate(kontakk['kontak_K']):
-            print(f"Nama : {contact['nama']}\nNomor : {contact['nomor']}\n")
+            print(f"kontak ke-{num+1}\nNama : {contact['nama']}\nNomor : {contact['nomor']}\n")
 
 # Proses Mengubah Kontak Admin
 def updating_admin_contact(pilihan_kontak_adm):
     tried = 0
-    nama_adm_baru = input("Nama : ")
+    while True:
+        nama_adm_baru = input("Nama : ")
+        if nama_adm_baru.strip() == "":
+            print("Nama tidak boleh kosong")
+        else:
+            break
     while tried < 3:
         nomor_adm_baru = input("Nomor : ").strip()
-        if not nomor_adm_baru.isnumeric() or nomor_adm_baru == "*" or "#":
+        if not nomor_adm_baru.isnumeric():
             print("Nomor tidak valid")
             tried += 1
         else:
             break
-        if any(kontakk['nama'] == nama_adm_baru for kontakk in data['Admin']['kontak_K']):
+    if tried == 3:
+        return
+    for atmin in data['Admin']:
+        if any(kontakk['nama'] == nama_adm_baru for kontakk in atmin['kontak_K']):
             print("Nama kontak telah terdaftar, silahkan masukkan kontak lain")
         else:
-            if any(kontakk['nomor'] == nomor_adm_baru for kontakk in data['Admin']['kontak_K']):
+            if any(kontakk['nomor'] == nomor_adm_baru for kontakk in atmin['kontak_K']):
                 print("Nomor kontak telah terdaftar, silahkan masukkan kontak lain")
         for kontak in data['Admin']:
             up = kontak['kontak_K'][pilihan_kontak_adm]
@@ -282,13 +310,13 @@ def delete_admin_contact():
     show_admin_contact()
     try:
         atmin_hapus = int(input("Pilih kontak yang ingin dihapus (hanya angka) : ")) - 1
-        atmin = data['Admin']
-        if atmin_hapus >= 0 and atmin_hapus <= len(atmin["kontak_K"]):
-            kontak_lama = atmin["kontak_K"].pop(atmin_hapus)
-            save_contacts(data)
-            print(f"Kontak [{kontak_lama['nama']}] Berhasil dihapus")
-        else:
-            print("Kontak tidak ditemukan")
+        for atmin in data['Admin']:
+            if 0 <= atmin_hapus < len(atmin["kontak_K"]):
+                kontak_lama = atmin["kontak_K"].pop(atmin_hapus)
+                save_contacts(data)
+                print(f"Kontak [{kontak_lama['nama']}] Berhasil dihapus")
+            else:
+                print("Kontak tidak ditemukan")
     except ValueError:
         print("Kontak tidak ditemukan")
 
