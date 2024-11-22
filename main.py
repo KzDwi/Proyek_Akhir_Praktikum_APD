@@ -46,6 +46,7 @@ def load_feedback():
             return json.load(feedback_file)
     except FileNotFoundError:
         return {"Feedback": []}
+fb = load_feedback()
 
 # Simpan Perubahan ke dalam feedback.json
 def save_feedback (feedback_data):
@@ -54,34 +55,30 @@ def save_feedback (feedback_data):
 
 # Fitur Umpan Balik yang menyimpan ke JSON
 def feed_back():
-    changelogs = load_feedback()
     print("========== FEEDBACK ==========")
-    pengguna_aktif = input("Masukkan Username Anda : ")
+    sender = input("Masukkan Username Anda : ")
     if not pengguna_aktif:
         print("Username harus diisi. feedback dibatalkan. ")
         return
-
     feedback_message = input("Berikan Feedback Anda : ")
     if feedback_message != None:
         # Tambahkan umpan balik ke data JSON
         feedback(feedback_message)
-        changelogs["Feedback"].append({"username": pengguna_aktif,"pesan": feedback_message})
-        save_feedback(changelogs)
+        fb["Feedback"].append({"username": pengguna_aktif,"name": sender,"pesan": feedback_message})
+        save_feedback(fb)
         print("Feedback Anda tersimpan. Terima kasih!")
     else:
         print("Pesan kosong, feedback tidak tersimpan.")
 
-# Fungsi untuk Pengumuman pada kontak
-# def pengumuman():
-#         for data in enumerate(changelog):
-#             version, perubahan = data
-#             print(f"Versi : {version}\n")
-#             for i in enumerate(perubahan):
-#                 print(f"{i}")
+# Fungsi untuk Admin melihat feedback yang terkirim pada program
+def check_feedback():
+    print("-----=====|| Daftar Feedback ||======-----")
+    for num, feed in enumerate(fb['Feedback']):
+        print(f"\nFeedback ke-{num + 1}\nUsername : {feed['username']}\nNama : {feed['name']}\nPesan : {feed['pesan']}")
 
 # Tuple yang muncul saat berada di menu awal
 def copyright():
-    copyright = ["Manajemen Kontak Informasi","Ahnaf Aliyyu (2409106035)","Nabila Putri Karni (2409106041)","Dwi Prasetyawan (2409106028)"]
+    copyright = ("Manajemen Kontak Informasi","Ahnaf Aliyyu (2409106035)","Nabila Putri Karni (2409106041)","Dwi Prasetyawan (2409106028)")
     print("="*20)
     print(f"{copyright[0]}\n{copyright[1]}\n{copyright[2]}\n{copyright[3]}")
     print("="*20)
@@ -90,14 +87,12 @@ def copyright():
 def add_user_contact():
     nama = input("Masukkan nama kontak : ")
     nomor = input("Masukkan nomor kontak : ")
-    email = input("Tambahkan e-mail? [Y/N] ")
-    if email == "Y" or email == "y":
-        e_mail = input("Masukkan e-mail kontak : ")
-    else:
-        e_mail = "N/A" #(jika pengguna tidak menambahkan email maka outputnya "N/A")
+    e_mail = input("Masukkan E-Mail (Tekan Enter jika tidak ada) : ")
+    domisili = input("Masukkan Domisili (Tekan Enter jika tidak ada) : ")
+    pekerjaan = input("Masukkan Pekerjaan (Tekan Enter jika tidak ada) : ")
     for kontak in data['User']:
         if kontak['username'] == pengguna_aktif:
-            kontak['kontak'].append({"nama":nama,"nomor":nomor,"email":e_mail})
+            kontak['kontak'].append({"nama":nama,"nomor":nomor,"email":e_mail,"domisili":domisili,"pekerjaan":pekerjaan})
             save_contacts(data)
     print("Kontak Berhasil ditambahkan")
 
@@ -106,7 +101,7 @@ def check_user_contact():
     for kontak in data['User']:
         if pengguna_aktif == kontak['username']:
             for num, contact in enumerate(kontak['kontak']):
-                print(f"Kontak ke-{num+1}\nNama : {contact['nama']}\nNomor : {contact['nomor']}\nE-mail : {contact['email']}\n")
+                print(f"Kontak ke-{num+1}\nNama : {contact['nama']}\nNomor : {contact['nomor']}\nE-mail : {contact['email']}\nDomisili : {contact['domisili']}\nPekerjaan : {contact['pekerjaan']}\n")
     print("Kontak Lainnya")
     for kontakk in data['Admin']:
         for num, contact in enumerate(kontakk['kontak_K']):
@@ -118,12 +113,16 @@ def updating_user_contact(pengguna_aktif,pilihan_kontak):
     nama_baru = input("Nama : ")
     nomor_baru = input("Nomor : ")
     email_baru = input("E-mail : ")
+    dom_baru = input("Domisili : ")
+    job_baru = input("Pekerjaan : ")
     for kontak in data['User']:
         if kontak['username'] == pengguna_aktif:
             up = kontak['kontak'][pilihan_kontak]
             up['nama'] = nama_baru
             up['nomor'] = nomor_baru
             up['email'] = email_baru
+            up['domisili'] = dom_baru
+            up['pekerjaan'] = job_baru
 
 # Fungsi Mengubah Data Kontak Pengguna Tertentu
 def update_user_contact():
@@ -144,7 +143,7 @@ def show_user_contact():
     for kontak in data['User']:
         if pengguna_aktif == kontak['username']:
             for num, contact in enumerate(kontak['kontak']):
-                print(f"Kontak ke-{num+1}\nNama : {contact['nama']}\nNomor : {contact['nomor']}\nE-mail : {contact['email']}\n")
+                print(f"Kontak ke-{num+1}\nNama : {contact['nama']}\nNomor : {contact['nomor']}\nE-mail : {contact['email']}\nDomisili : {contact['domisili']}\nPekerjaan : {contact['pekerjaan']}\n")
 
 # Menghapus Kontak Pengguna
 def delete_user_contact():
@@ -204,6 +203,17 @@ def update_admin_contact():
             print("Kontak berhasil diubah")
         else:
             print("Kontak tidak ada")
+
+def delete_admin_contact():
+    show_admin_contact()
+    atmin_hapus = int(input("Pilih kontak yang ingin dihapus (hanya angka) : ")) - 1
+    atmin = data['Admin']
+    if atmin_hapus >= 0 and atmin_hapus <= len(atmin["kontak_K"]):
+        kontak_lama = atmin["kontak_K"].pop(atmin_hapus)
+        save_contacts(data)
+        print(f"Kontak [{kontak_lama['nama']}] Berhasil dihapus")
+    else:
+        print("Kontak tidak ditemukan")
 
 # Membuat Akun Pengguna Baru
 def create_account(data):
@@ -312,7 +322,9 @@ while True:
             | [1] Tambahkan Kontak Khusus    |
             | [2] Lihat Semua Daftar Kontak  |
             | [3] Ubah Kontak Khusus         |
-            | [4] Log Out                    |
+            | [4] Hapus Kontak Khusus        |
+            | [5] Lihat Feedback             |
+            | [6] Log Out                    |
             |                                |
             ==================================
     """)
@@ -326,13 +338,20 @@ while True:
     
                             case 3:
                                 update_admin_contact()
-    
+                            
                             case 4:
+                                delete_admin_contact()
+                            
+                            case 5:
+                                check_feedback()
+
+                            case 6:
                                 # Log out
                                 print("Keluar dari mode Admin. . .")
                                 start = False
+                                pengguna_aktif = None
                                 i = 1
-    
+
                             case _:
                                 print("Perintah Tidak Diketahui (Pilih Antara 1 sampai 4)")
                 else:
