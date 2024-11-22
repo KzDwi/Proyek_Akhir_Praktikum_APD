@@ -3,12 +3,10 @@ import csv
 import smtplib
 import os
 
-
 start = True # Untuk Pengulangan saat login berhasil
 
 # Deklarasi Tempat json
 json_s = str(os.path.dirname(os.path.abspath(__file__))) + "\\Contacts.json"
-
 json_feedback = str(os.path.dirname(os.path.abspath(__file__))) + "\\feedback.json"
 
 # Membaca Contacts.json  
@@ -56,10 +54,6 @@ def save_feedback (feedback_data):
 # Fitur Umpan Balik yang menyimpan ke JSON
 def feed_back():
     print("========== FEEDBACK ==========")
-    sender = input("Masukkan Username Anda : ")
-    if not pengguna_aktif:
-        print("Username harus diisi. feedback dibatalkan. ")
-        return
     feedback_message = input("Berikan Feedback Anda : ")
     if feedback_message != None:
         # Tambahkan umpan balik ke data JSON
@@ -106,7 +100,6 @@ def check_user_contact():
     for kontakk in data['Admin']:
         for num, contact in enumerate(kontakk['kontak_K']):
             print(f"Nama : {contact['nama']}\nNomor : {contact['nomor']}\n")
-
 
 # Proses Mengubah Data Kontak
 def updating_user_contact(pengguna_aktif,pilihan_kontak):
@@ -167,7 +160,7 @@ def add_admin_contact():
 #  Melihat Semua Daftar Kontak sbg admin
 def check_admin_contact():
     for user in data['User']:
-        print(f"\nPengguna: {user['username']}")
+        print(f"\nPengguna: {user['name']} ({user['username']})")
         for num, contact in enumerate(user['kontak']):
             print(f"Kontak ke-{num+1}\nNama : {contact['nama']}\nNomor : {contact['nomor']}\nE-mail : {contact['email']}\n")
 
@@ -223,6 +216,7 @@ def create_account(data):
         print("Username telah terdaftar, silahkan masukkan username lain atau masuk melalui Login")
         return data
     password = input("Masukkan Password : ")
+    Nama = input("Masukkan Nama Kamu :")
     data['User'].append({"username":username,"password":password,"kontak":[]})
     save_contacts(data)
     print("Akun anda telah dibuat, silahkan pilih opsi login untuk masuk")
