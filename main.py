@@ -112,7 +112,7 @@ def add_user_contact():
     pekerjaan = input("Masukkan Pekerjaan (Tekan Enter jika tidak ada) : ")
     if pekerjaan.strip() == "":
         pekerjaan = "N/A"
-    for kontak in data['User ']:
+    for kontak in data['User']:
         if kontak['username'] == pengguna_aktif:
             kontak['kontak'].append({"nama": nama, "nomor": nomor, "email": e_mail, "domisili": domisili, "pekerjaan": pekerjaan})
             save_contacts(data)
@@ -120,7 +120,7 @@ def add_user_contact():
 
 # Melihat Daftar Kontak Pengguna
 def check_user_contact():
-    for kontak in data['User ']:
+    for kontak in data['User']:
         if pengguna_aktif == kontak['username']:
             for num, contact in enumerate(kontak['kontak']):
                 print(f"Kontak ke-{num + 1}\nNama : {contact['nama']}\nNomor : {contact['nomor']}\nE-mail : {contact['email']}\nDomisili : {contact['domisili']}\nPekerjaan : {contact['pekerjaan']}\n")
@@ -152,7 +152,7 @@ def updating_user_contact(pengguna_aktif, pilihan_kontak):
     job_baru = input("Pekerjaan : ")
     if job_baru.strip() == "":
         job_baru = "N/A"
-    for kontak in data['User ']:
+    for kontak in data['User']:
         if kontak['username'] == pengguna_aktif:
             up = kontak['kontak'][pilihan_kontak]
             up['nama'] = nama_baru
@@ -166,7 +166,7 @@ def update_user_contact():
     show_user_contact()
     try:
         pilihan_kontak = int(input("Pilih kontak yang ingin diubah (hanya angka) : ")) - 1
-        for kontak in data['User ']:
+        for kontak in data['User']:
             if pengguna_aktif == kontak["username"]:
                 if 0 <= pilihan_kontak < len(kontak['kontak']):
                     updating_user_contact(pengguna_aktif, pilihan_kontak)
@@ -180,7 +180,7 @@ def update_user_contact():
 
 # Menampilkan Kontak Pengguna
 def show_user_contact():
-    for kontak in data['User ']:
+    for kontak in data['User']:
         if pengguna_aktif == kontak['username']:
             for num, contact in enumerate(kontak['kontak']):
                 print(f"Kontak ke-{num + 1}\nNama : {contact['nama']}\nNomor : {contact['nomor']}\nE-mail : {contact['email']}\nDomisili : {contact['domisili']}\nPekerjaan : {contact['pekerjaan']}\n")
@@ -190,7 +190,7 @@ def delete_user_contact():
     show_user_contact()
     try:
         indeks_hapus = int(input("Pilih kontak yang ingin dihapus (hanya angka) : ")) - 1
-        for kontak in data['User ']:
+        for kontak in data['User']:
             if pengguna_aktif == kontak['username ']:
                 if 0 <= indeks_hapus < len(kontak['kontak']):
                     kontak_lama = kontak['kontak'].pop(indeks_hapus)
