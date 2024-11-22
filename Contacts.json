@@ -1,29 +1,16 @@
 {
     "User": [
         {
-            "username": "username",
-            "password": "password",
-            "kontak": [
-                {
-                    "nama": "Waim Bong",
-                    "nomor": "081117777",
-                    "email": "email@gmail.com"
-                }
-            ]
-        },
-        {
             "username": "dwi",
+            "name": "Dwi",
             "password": "200600",
             "kontak": [
                 {
-                    "nama": "duar",
+                    "nama": "Indah",
                     "nomor": "200",
-                    "email": "N/A"
-                },
-                {
-                    "nama": "penambah",
-                    "nomor": "220",
-                    "email": "N/A"
+                    "email": "N/A",
+                    "domisili": "N/A",
+                    "pekerjaan": "N/A"
                 }
             ]
         }
